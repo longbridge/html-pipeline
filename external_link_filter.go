@@ -17,7 +17,10 @@ func (f ExternalLinkFilter) Call(doc *goquery.Document) (err error) {
 	doc.Find("a").Each(func(i int, node *goquery.Selection) {
 		src := node.AttrOr("href", "")
 		// Fix src that not URL Schema
-		srcURL, _ := url.Parse(src)
+		srcURL, err := url.Parse(src)
+		if err != nil {
+			return
+		}
 		if srcURL.Scheme == "" {
 			srcURL.Scheme = "https"
 			src = srcURL.String()
